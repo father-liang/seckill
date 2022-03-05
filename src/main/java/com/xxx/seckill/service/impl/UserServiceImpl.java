@@ -39,7 +39,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     /**
      * 登录功能的实现
      *
-     * @param loginVo 从前端传来的参数
+     * @param loginVo  从前端传来的参数
      * @param request
      * @param response
      * @return
@@ -75,32 +75,62 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String ticket = UUIDUtil.uuid();
 
         //将用户信息存到redis中
-        redisTemplate.opsForValue().set("user:"+ticket, user);
+        redisTemplate.opsForValue().set("user:" + ticket, user);
 
 
 //        request.getSession().setAttribute(ticket, user);
         CookieUtil.setCookie(request, response, "userTicket", ticket);
-        return RespBean.success();
+        return RespBean.success(ticket);
     }
 
 
     /**
      * 根据Ticket的值从redis中获取User对象
+     *
      * @param userTicket cookie中的ticket值
      * @return User对象
      */
     @Override
     public User getUserByCookie(String userTicket, HttpServletRequest request, HttpServletResponse response) {
-        if (StringUtils.isEmpty(userTicket)){
+        if (StringUtils.isEmpty(userTicket)) {
             return null;
         }
 
         User user = (User) redisTemplate.opsForValue().get("user:" + userTicket);
 
-        if(user != null){
+        if (user != null) {
             CookieUtil.setCookie(request, response, "userTicket", userTicket);
         }
 
         return user;
     }
+
+    /**
+     * 更新密码
+     *
+     * @param userTicket
+     * @param request
+     * @param response
+     * @return
+     */
+    @Override
+    public RespBean updatePassword(String userTicket, String passWord, HttpServletRequest request, HttpServletResponse response) {
+        User user = getUserByCookie(userTicket, request, response);
+        if (user == null) {
+            throw new GlobalException(RespBeanEnum.MOBILE_NOT_EXIST);
+        }
+
+        user.setPassword(MD5Util.inputPassToDBPass(passWord, user.getSalt()));
+
+        int result = userMapper.updateById(user);
+        //完成了数据库用户密码的更新操作之后，要删除redis缓存中的值，保证redis中数据与数据库数据的一致性
+        if (result == 1) {
+            redisTemplate.delete("user:" + userTicket);
+            return RespBean.success();
+        }
+
+        return  RespBean.error(RespBeanEnum.PASSWORD_UPDATE_FAIL);
+    }
+
+
 }
