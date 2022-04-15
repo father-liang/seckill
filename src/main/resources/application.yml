@@ -54,7 +54,7 @@ spring:
   rabbitmq:
     host: 192.168.157.1
     username: guest
-    password: quest
+    password: guest
     virtual-host: /
     # java操作用的端口5672，http访问的端口是15672
     port: 5672
