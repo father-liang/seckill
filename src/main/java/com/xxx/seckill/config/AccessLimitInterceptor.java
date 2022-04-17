@@ -7,6 +7,7 @@ import com.xxx.seckill.service.IUserService;
 import com.xxx.seckill.utils.CookieUtil;
 import com.xxx.seckill.vo.RespBean;
 import com.xxx.seckill.vo.RespBeanEnum;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
@@ -15,9 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+@Component
 public class AccessLimitInterceptor implements HandlerInterceptor {
 
     @Resource
@@ -68,7 +71,7 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private void render(HttpServletResponse response, RespBeanEnum respBeanEnum) throws JsonProcessingException {
+    private void render(HttpServletResponse response, RespBeanEnum respBeanEnum) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter writer = response.getWriter();

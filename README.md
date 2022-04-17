@@ -10,6 +10,10 @@ redis
 rabbitMq
 mysql
 
+## QPS
+未优化前：541
+redis预减库存，rabbitMq异步下单后：2100
+
 ## 秒杀流程
 ![avatar](https://img-blog.csdnimg.cn/33c9c0de80204c6cb429b638ca1cf699.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6L-Y5LiN5b-r54K55rua5Y6755yL5Lmm77yf,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center)
 

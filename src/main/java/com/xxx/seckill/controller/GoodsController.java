@@ -44,6 +44,7 @@ public class GoodsController {
 
     /**
      * window 5000次压力测试，QPS：541
+     * 加了redis缓存，rabbitmq异步操作后，QPS：2100
      *
      * @param model
      * @param user

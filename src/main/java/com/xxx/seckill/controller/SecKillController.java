@@ -53,41 +53,6 @@ public class SecKillController implements InitializingBean {
 
     private Map<Long, Boolean> emptyStockMap = new HashMap<>();
 
-//    @RequestMapping(value = "/doSeckill2")
-//    public String doSeckill2(Model model, User user, Long goodsId) {
-//        if (user == null) {
-//            return "login";
-//        }
-//
-//        model.addAttribute("user", user);
-//        GoodsVo goods = goodsService.findGoodsVoByGoodsId(goodsId);
-//        //判断库存
-//        if (goods.getStockCount() < 1) {
-//            model.addAttribute("errmsg", RespBeanEnum.EMPTY_STOCK.getMessage());
-//
-//            return "secKillFail";
-//        }
-//
-//        //判断是否重复抢购
-//        SeckillOrder seckillOrder = seckillOrderService.getOne(new QueryWrapper<SeckillOrder>().eq("user_id",
-//                user.getId())
-//                .eq("goods_id", goodsId));
-//
-//        if (seckillOrder != null) {
-//            //已经重复抢购了
-//            model.addAttribute("errmsg", RespBeanEnum.REPEATE_ERROR.getMessage());
-//            return "secKillFail";
-//        }
-//
-//        //开始抢购，创建订单
-//        Order order = orderService.seckill(user, goods);
-//        model.addAttribute("order", order);
-//        model.addAttribute("goods", goods);
-//        return "orderDetail";
-//
-//
-//    }
-
     /**
      * 秒杀功能
      *
@@ -136,29 +101,6 @@ public class SecKillController implements InitializingBean {
         SeckillMessage seckillMessage = new SeckillMessage(user, goodsId);
         mqSender.sendSeckillMessage(gson.toJson(seckillMessage));
         return RespBean.success(0);
-
-//        GoodsVo goods = goodsService.findGoodsVoByGoodsId(goodsId);
-//        //判断库存
-//        if (goods.getStockCount() < 1) {
-//            model.addAttribute("errmsg", RespBeanEnum.EMPTY_STOCK.getMessage());
-//
-//            return RespBean.error(RespBeanEnum.EMPTY_STOCK);
-//        }
-//
-//        //从redis中获取，判断是否重复抢购
-//        SeckillOrder seckillOrder = (SeckillOrder) redisTemplate.opsForValue()
-//                .get("order:" + user.getId() + ":" + goods.getId());
-//
-//
-//        if (seckillOrder != null) {
-//            //已经重复抢购了
-//            model.addAttribute("errmsg", RespBeanEnum.REPEATE_ERROR.getMessage());
-//            return RespBean.error(RespBeanEnum.REPEATE_ERROR);
-//        }
-//
-//        //开始抢购，创建订单
-//        Order order = orderService.seckill(user, goods);
-//        return RespBean.success(order);
 
     }
 
